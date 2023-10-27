@@ -34,6 +34,7 @@ const get = async (req, res) => {
 
 const post = async (req, res) => {
     try {
+        req.body.createdDate = new Date();
         await productRepo.add(req.body);
         res.status(201);
         res.send('Created');

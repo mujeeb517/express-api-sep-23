@@ -5,8 +5,12 @@ const schema = new mongoose.Schema({
     model: String,
     price: Number,
     inStock: Boolean,
-    discount: Number
+    discount: Number,
+    createdDate: Date,
+    updatedDate: {
+        type: Date,
+        default: Date.now
+    }
 });
 
 module.exports = mongoose.model('Product', schema);
-
