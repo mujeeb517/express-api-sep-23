@@ -1,9 +1,40 @@
 const Product = require('../model/productModel');
 
-const get = (pageSize, page) => {
+const count = () => {
+    return Product.count();
+};
+
+const getSortBy = (sortBy) => {
+    switch (sortBy.toLowerCase()) {
+        case 'brand':
+        case 'model':
+        case 'price':
+        case 'discount':
+            return sortBy.toLowerCase();
+        default:
+            return 'brand';
+    }
+};
+
+const getSortDir = (sortDir) => {
+    switch (sortDir.toLowerCase()) {
+        case 'asc':
+            return 1;
+        case 'desc':
+            return -1;
+        default:
+            return -1;
+    }
+};
+
+const get = (pageSize, page, sortBy, sortDir) => {
     const recordsToSkip = (page - 1) * pageSize;
+    const sortField = getSortBy(sortBy);
+    const sortDirField = getSortDir(sortDir);
+
     return Product
         .find({}, { __v: 0 })
+        .sort({ [sortField]: sortDirField })
         .skip(recordsToSkip)
         .limit(pageSize);
 };
@@ -44,4 +75,5 @@ module.exports = {
     remove,
     update,
     patch,
+    count,
 };

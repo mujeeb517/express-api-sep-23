@@ -1,15 +1,32 @@
 const productRepo = require('../repositories/productRepo');
 
+// reading all the data
+// paginating 
+// sorting
+// clien - server (payload, req params, query params, headers)
 const get = async (req, res) => {
     const page = req.params.page || 1;
     const pageSize = req.params.size || 10;
+    const sortBy = req.query.sort || '';
+    const direction = req.query.direction || '';
 
-    var p = productRepo.get(pageSize, page);
+    const rows = await productRepo.count();
+    const pages = Math.ceil(rows / pageSize);
+
+    var p = productRepo.get(pageSize, page, sortBy, direction);
     p.then(function (products) {
+        const response = {
+            metadata: {
+                rows: rows,
+                pages: pages
+            },
+            data: products
+        };
         res.status(200);
-        res.json(products);
+        res.json(response);
     })
         .catch(function (err) {
+            console.error(err);
             res.status(500);
             res.send('Internal server error');
         });
@@ -38,8 +55,13 @@ const getById = async (req, res) => {
             res.send('not found');
         }
     } catch (err) {
-        res.status(500);
-        res.send('Internal server error');
+        if (err.message && err.message.indexOf('Cast to ObjectId failed for value') > -1) {
+            res.status(404);
+            res.send('Not found!');
+        } else {
+            res.status(500);
+            res.send('Internal server error');
+        }
     }
 };
 
