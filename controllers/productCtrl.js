@@ -9,11 +9,12 @@ const get = async (req, res) => {
     const pageSize = req.params.size || 10;
     const sortBy = req.query.sort || '';
     const direction = req.query.direction || '';
+    const search = req.query.search || '';
 
-    const rows = await productRepo.count();
+    const rows = await productRepo.count(search);
     const pages = Math.ceil(rows / pageSize);
 
-    var p = productRepo.get(pageSize, page, sortBy, direction);
+    var p = productRepo.get(pageSize, page, sortBy, direction, search);
     p.then(function (products) {
         const response = {
             metadata: {

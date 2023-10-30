@@ -1,7 +1,13 @@
 const Product = require('../model/productModel');
 
-const count = () => {
-    return Product.count();
+const count = (search) => {
+    const filter = {
+        $or: [
+            { brand: new RegExp(search, 'i') },
+            { model: new RegExp(search, 'i') }
+        ]
+    };
+    return Product.count(filter);
 };
 
 const getSortBy = (sortBy) => {
@@ -27,13 +33,30 @@ const getSortDir = (sortDir) => {
     }
 };
 
-const get = (pageSize, page, sortBy, sortDir) => {
+const get = (pageSize, page, sortBy, sortDir, search) => {
     const recordsToSkip = (page - 1) * pageSize;
     const sortField = getSortBy(sortBy);
     const sortDirField = getSortDir(sortDir);
 
+    // pattern matching
+
+    // mobile number, sending otp
+    // 9900ab2892
+    // 10 digts
+    // abc@gmail.com
+    // character@akdfkdf.character
+    // [0-9]{10}
+    // [a-z][A-Z]+@[a-z][A-Z]+.[a-z][A-Z]+
+
+    const filter = {
+        $or: [
+            { brand: new RegExp(search, 'i') },
+            { model: new RegExp(search, 'i') }
+        ]
+    };
+
     return Product
-        .find({}, { __v: 0 })
+        .find(filter, { __v: 0 })
         .sort({ [sortField]: sortDirField })
         .skip(recordsToSkip)
         .limit(pageSize);
