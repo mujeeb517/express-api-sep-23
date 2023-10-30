@@ -40,8 +40,13 @@ const post = async (req, res) => {
         res.status(201);
         res.send('Created');
     } catch (err) {
-        res.status(500);
-        res.send('Internal server error');
+        if (err.message && err.message.indexOf('products validation failed') > -1) {
+            res.status(400);
+            res.json(err.errors);
+        } else {
+            res.status(500);
+            res.send('Internal server error');
+        }
     }
 };
 
