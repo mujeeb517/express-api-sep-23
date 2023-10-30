@@ -18,4 +18,21 @@ mongoose.connect('mongodb://127.0.0.1:27017/products-sep-23')
 
 app.use(bodyParser.json());
 app.use('/', homeRouter);
+
+// validate my request
+// middleware
+function authenticate(req, res, next) {
+    const headers = req.headers;
+    console.log(headers.authorization);
+    next();
+}
+
+
+// pipeline
+// stages
+// 
+
+app.use(authenticate);
+
+
 app.use('/api/products', productRoutes);
