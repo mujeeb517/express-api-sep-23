@@ -1,5 +1,6 @@
 const userRepo = require('../repositories/userRepo');
 const jwt = require('jsonwebtoken');
+const config = require('../config');
 
 const hasValidationError = (err) => err.message
     && err.message.indexOf('users validation failed') > -1;
@@ -32,7 +33,7 @@ const signin = async (req, res) => {
     try {
         const user = await userRepo.get(req.body);
         if (user) {
-            const token = jwt.sign({ email: user.email }, 'secret', {
+            const token = jwt.sign({ email: user.email }, config.jwtSecret, {
                 expiresIn: '1d'
             });
             res.status(200).json({ token: token });

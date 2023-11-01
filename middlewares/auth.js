@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const config = require('../config');
 // validate my request
 // middleware
 function basicAuth(req, res, next) {
@@ -33,7 +34,7 @@ function tokenAuth(req, res, next) {
             const tokens = authHeader.split(' ');
             const jwtToken = tokens[1];
 
-            jwt.verify(jwtToken, 'secret');
+            jwt.verify(jwtToken, config.jwtSecret);
             next();
         }
     } catch (err) {
