@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken');
 // validate my request
 // middleware
 function basicAuth(req, res, next) {
@@ -22,6 +23,25 @@ function basicAuth(req, res, next) {
     }
 }
 
+function tokenAuth(req, res, next) {
+    try {
+        const authHeader = req.headers.authorization;
+        if (!authHeader) {
+            res.status(401).send('Unauthorized');
+        } else {
+            // Bearer dkfjdkfjdkfjdk===
+            const tokens = authHeader.split(' ');
+            const jwtToken = tokens[1];
+
+            jwt.verify(jwtToken, 'secret');
+            next();
+        }
+    } catch (err) {
+        res.status(401).send('Unauthorized');
+    }
+}
+
 module.exports = {
-    basicAuth: basicAuth
+    basicAuth,
+    tokenAuth,
 };

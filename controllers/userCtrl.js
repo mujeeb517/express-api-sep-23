@@ -1,4 +1,5 @@
 const userRepo = require('../repositories/userRepo');
+const jwt = require('jsonwebtoken');
 
 const hasValidationError = (err) => err.message
     && err.message.indexOf('users validation failed') > -1;
@@ -27,6 +28,22 @@ const signup = async (req, res) => {
     }
 };
 
+const signin = async (req, res) => {
+    try {
+        const user = await userRepo.get(req.body);
+        if (user) {
+            const token = jwt.sign({ email: user.email }, 'secret', {
+                expiresIn: '1d'
+            });
+            res.status(200).json({ token: token });
+        }
+        else res.status(401).send('Email or password is wrong');
+    } catch (err) {
+        res.status(500).send('Internal server errror');
+    }
+};
+
 module.exports = {
-    signup
+    signup,
+    signin
 };

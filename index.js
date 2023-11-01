@@ -4,7 +4,7 @@ const productRoutes = require('./routes/productRouter');
 const userRouter = require('./routes/userRouter');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const { basicAuth } = require('./middlewares/auth.js');
+const { tokenAuth } = require('./middlewares/auth.js');
 
 const app = express();
 
@@ -23,7 +23,8 @@ app.use(bodyParser.json());
 app.use('/', homeRouter);
 app.use('/api/users', userRouter);
 
-app.use(basicAuth);
+// app.use(basicAuth);
+app.use(tokenAuth);
 
 // private
 app.use('/api/products', productRoutes);
