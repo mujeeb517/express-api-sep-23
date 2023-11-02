@@ -6,7 +6,7 @@ const add = (payload) => {
 };
 
 const get = (payload) => {
-    return User.findOne({ email: payload.email, password: payload.password }, { __v: 0, password: 0 });
+    return User.findOne({ email: payload.email }, { __v: 0 });
 };
 
 module.exports = {

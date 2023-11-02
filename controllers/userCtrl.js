@@ -1,5 +1,7 @@
-const userRepo = require('../repositories/userRepo');
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+
+const userRepo = require('../repositories/userRepo');
 const config = require('../config');
 
 const hasValidationError = (err) => err.message
@@ -10,7 +12,9 @@ const hasConflict = (err) => err.message
 
 const signup = async (req, res) => {
     try {
-        req.body.createdDate = new Date();
+        const { body } = req;
+        body.createdDate = new Date();
+        body.password = await bcrypt.hash(body.password, 2);
         await userRepo.add(req.body);
         res.status(201);
         res.send('Created');
@@ -33,10 +37,16 @@ const signin = async (req, res) => {
     try {
         const user = await userRepo.get(req.body);
         if (user) {
-            const token = jwt.sign({ email: user.email }, config.jwtSecret, {
-                expiresIn: '1d'
-            });
-            res.status(200).json({ token: token });
+            // verify password
+            const result = await bcrypt.compare(req.body.password, user.password);
+            if (result) {
+                const token = jwt.sign({ email: user.email }, config.jwtSecret, {
+                    expiresIn: '1d'
+                });
+                res.status(200).json({ token: token });
+            } else {
+                res.status(401).send('Unauthorized');
+            }
         }
         else res.status(401).send('Email or password is wrong');
     } catch (err) {
