@@ -13,6 +13,7 @@ const hasConflict = (err) => err.message
 const signup = async (req, res) => {
     try {
         const { body } = req;
+        body.role = 'User';
         body.createdDate = new Date();
         body.password = await bcrypt.hash(body.password, 2);
         await userRepo.add(req.body);
@@ -40,7 +41,7 @@ const signin = async (req, res) => {
             // verify password
             const result = await bcrypt.compare(req.body.password, user.password);
             if (result) {
-                const token = jwt.sign({ email: user.email }, config.jwtSecret, {
+                const token = jwt.sign({ email: user.email, role: user.role }, config.jwtSecret, {
                     expiresIn: '1d'
                 });
                 res.status(200).json({ token: token });
@@ -58,3 +59,8 @@ module.exports = {
     signup,
     signin
 };
+
+// authentication 
+// authorization (privilages)
+// permissions
+// canDelete, canEdit, canView

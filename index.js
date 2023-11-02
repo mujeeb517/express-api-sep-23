@@ -25,6 +25,5 @@ app.use('/api/users', userRouter);
 
 // app.use(basicAuth);
 app.use(tokenAuth);
-
 // private
 app.use('/api/products', productRoutes);

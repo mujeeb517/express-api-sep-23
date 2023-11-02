@@ -19,6 +19,10 @@ const schema = new mongoose.Schema({
         type: String,
         required: [true, 'Last Name is required'],
     },
+    role: {
+        type: String,
+        default: 'User'
+    },
     createdDate: {
         type: Date,
         required: true

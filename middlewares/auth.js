@@ -34,7 +34,8 @@ function tokenAuth(req, res, next) {
             const tokens = authHeader.split(' ');
             const jwtToken = tokens[1];
 
-            jwt.verify(jwtToken, config.jwtSecret);
+            const decoded = jwt.verify(jwtToken, config.jwtSecret);
+            req.token = decoded;
             next();
         }
     } catch (err) {
@@ -42,7 +43,14 @@ function tokenAuth(req, res, next) {
     }
 }
 
+function authorizeAdmin(req, res, next) {
+    const role = req.token.role;
+    if (role.toLowerCase() === 'admin') next();
+    else res.status(403).send('Forbidden');
+};
+
 module.exports = {
     basicAuth,
     tokenAuth,
+    authorizeAdmin,
 };
