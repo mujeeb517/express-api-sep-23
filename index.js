@@ -19,6 +19,10 @@ mongoose.connect('mongodb://127.0.0.1:27017/products-sep-23')
     .catch(err => console.log(err));
 
 app.use(bodyParser.json());
+
+// static files
+app.use(express.static('uploads'));
+
 // public
 app.use('/', homeRouter);
 app.use('/api/users', userRouter);

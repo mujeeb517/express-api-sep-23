@@ -5,17 +5,24 @@ const productRepo = require('../repositories/productRepo');
 // sorting
 // clien - server (payload, req params, query params, headers)
 const get = async (req, res) => {
-    const page = req.params.page || 1;
-    const pageSize = req.params.size || 10;
-    const sortBy = req.query.sort || '';
-    const direction = req.query.direction || '';
-    const search = req.query.search || '';
+    try {
+        const page = req.params.page || 1;
+        const pageSize = req.params.size || 10;
+        const sortBy = req.query.sort || '';
+        const direction = req.query.direction || '';
+        const search = req.query.search || '';
 
-    const rows = await productRepo.count(search);
-    const pages = Math.ceil(rows / pageSize);
+        const rows = await productRepo.count(search);
+        const pages = Math.ceil(rows / pageSize);
 
-    var p = productRepo.get(pageSize, page, sortBy, direction, search);
-    p.then(function (products) {
+        const products = await productRepo.get(pageSize, page, sortBy, direction, search);
+
+        products.forEach(product => {
+            product.image = product.image ?
+                `${req.protocol}://${req.get('host')}/${product.image}` :
+                '';
+        });
+
         const response = {
             metadata: {
                 rows: rows,
@@ -25,12 +32,11 @@ const get = async (req, res) => {
         };
         res.status(200);
         res.json(response);
-    })
-        .catch(function (err) {
-            console.error(err);
-            res.status(500);
-            res.send('Internal server error');
-        });
+    } catch (err) {
+        console.error(err);
+        res.status(500);
+        res.send('Internal server error');
+    }
 };
 
 const post = async (req, res) => {
