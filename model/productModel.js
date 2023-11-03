@@ -23,6 +23,9 @@ const schema = new mongoose.Schema({
         //     message: 'custom validation failed'
         // }
     },
+    image: {
+        type: String
+    },
     inStock: Boolean,
     discount: Number,
     createdDate: Date,
