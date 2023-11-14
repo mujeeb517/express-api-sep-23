@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const logger = require('../util/logger');
 
 const userRepo = require('../repositories/userRepo');
 const config = require('../config');
@@ -20,6 +21,7 @@ const signup = async (req, res) => {
         res.status(201);
         res.send('Created');
     } catch (err) {
+        logger.error(err);
         if (hasValidationError(err)) {
             res.status(400);
             res.json(err.errors);
@@ -64,3 +66,4 @@ module.exports = {
 // authorization (privilages)
 // permissions
 // canDelete, canEdit, canView
+// logging NFR: req, app

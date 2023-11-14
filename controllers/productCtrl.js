@@ -1,4 +1,5 @@
 const productRepo = require('../repositories/productRepo');
+const logger = require('../util/logger');
 
 // reading all the data
 // paginating 
@@ -6,6 +7,7 @@ const productRepo = require('../repositories/productRepo');
 // clien - server (payload, req params, query params, headers)
 const get = async (req, res) => {
     try {
+        logger.info('request arrived');
         const page = req.params.page || 1;
         const pageSize = req.params.size || 10;
         const sortBy = req.query.sort || '';
@@ -30,10 +32,11 @@ const get = async (req, res) => {
             },
             data: products
         };
+        logger.info('request processed');
         res.status(200);
         res.json(response);
     } catch (err) {
-        console.error(err);
+        logger.error(err);
         res.status(500);
         res.send('Internal server error');
     }
