@@ -7,18 +7,19 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const path=require('path');
 const fs=require('fs');
+const config =require('./config');
 
 const { tokenAuth } = require('./middlewares/auth.js');
 
 const app = express();
 
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
 
-mongoose.connect('mongodb://127.0.0.1:27017/products-sep-23')
+mongoose.connect(config.conStr)
     .then(() => console.log('Connected to Db'))
     .catch(err => console.log(err));
 

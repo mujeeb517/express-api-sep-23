@@ -63,7 +63,11 @@ const getById = async (req, res) => {
     try {
         const id = req.params.id;
         const data = await productRepo.getById(id);
+       
         if (data) {
+            data.image = data.image ?
+            `${req.protocol}://${req.get('host')}/${data.image}` :
+            '';
             res.status(200);
             res.json(data);
         } else {
