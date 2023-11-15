@@ -1,4 +1,5 @@
 const Product = require('../model/productModel');
+const Review = require('../model/reviewModel');
 
 const count = (search) => {
     const filter = {
@@ -91,6 +92,11 @@ const patch = (id, payload) => {
     return Product.findByIdAndUpdate(id, updateReq);
 };
 
+const addReview = (payload) => {
+    const review = new Review(payload);
+    return review.save();
+};
+
 module.exports = {
     get,
     add,
@@ -99,4 +105,5 @@ module.exports = {
     update,
     patch,
     count,
+    addReview,
 };

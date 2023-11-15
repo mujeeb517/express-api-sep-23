@@ -123,6 +123,23 @@ const patch = async (req, res) => {
     }
 };
 
+const addReview = async (req, res) => {
+    try {
+        req.body.createdDate = new Date();
+        await productRepo.addReview(req.body);
+        res.status(201);
+        res.send('Created');
+    } catch (err) {
+        if (err.message && err.message.indexOf('validation failed') > -1) {
+            res.status(400);
+            res.json(err.errors);
+        } else {
+            res.status(500);
+            res.send('Internal server error');
+        }
+    }
+};
+
 module.exports = {
     get,
     post,
@@ -130,6 +147,7 @@ module.exports = {
     remove,
     update,
     patch,
+    addReview,
 };
 
 
