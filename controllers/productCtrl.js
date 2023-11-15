@@ -63,13 +63,17 @@ const getById = async (req, res) => {
     try {
         const id = req.params.id;
         const data = await productRepo.getById(id);
-       
         if (data) {
+            const reviews = await productRepo.getReviews(id); 
             data.image = data.image ?
             `${req.protocol}://${req.get('host')}/${data.image}` :
             '';
+            const product = {
+                ...data._doc,
+                reviews
+            };
             res.status(200);
-            res.json(data);
+            res.json(product);
         } else {
             res.status(404);
             res.send('not found');

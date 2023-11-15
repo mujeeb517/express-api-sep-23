@@ -97,6 +97,11 @@ const addReview = (payload) => {
     return review.save();
 };
 
+const getReviews = (productId) => {
+    return Review.find({productId},{_id:0,__v:0});
+};
+
+
 module.exports = {
     get,
     add,
@@ -106,4 +111,5 @@ module.exports = {
     patch,
     count,
     addReview,
+    getReviews,
 };
