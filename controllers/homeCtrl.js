@@ -1,6 +1,6 @@
 const get = (req, res) => {
     res.status(200);
-    res.send('Hello Express');
+    res.send('Hello Express!!');
 };
 
 // monitoring
