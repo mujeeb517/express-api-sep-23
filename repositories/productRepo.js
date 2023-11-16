@@ -101,6 +101,16 @@ const getReviews = (productId) => {
     return Review.find({productId},{_id:0,__v:0});
 };
 
+const getAvgRating = (productId)=>{
+   return Review.aggregate(
+        [
+            {$match:{productId:productId}},
+            {$group:{_id:'$productId', avgRating:{$avg:'$rating'}}},
+            {$project:{_id:0}}
+        ]
+    )
+};
+
 
 module.exports = {
     get,
@@ -112,4 +122,5 @@ module.exports = {
     count,
     addReview,
     getReviews,
+    getAvgRating,
 };

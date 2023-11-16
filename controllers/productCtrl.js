@@ -65,12 +65,17 @@ const getById = async (req, res) => {
         const data = await productRepo.getById(id);
         if (data) {
             const reviews = await productRepo.getReviews(id); 
+            const ratings = await productRepo.getAvgRating(id);
             data.image = data.image ?
             `${req.protocol}://${req.get('host')}/${data.image}` :
             '';
+            const avgRating = ratings.length > 0 
+            ? +ratings[0].avgRating.toFixed(1)
+            :undefined;
             const product = {
                 ...data._doc,
-                reviews
+                avgRating,
+                reviews,
             };
             res.status(200);
             res.json(product);
